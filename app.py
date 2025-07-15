@@ -4,14 +4,17 @@ from scraper import get_qs_top100
 
 @st.cache_data(ttl=3600)
 def load_data():
-    df = get_qs_top100()
-    return df
+    return get_qs_top100()
 
 def main():
-    st.title("🎓 Top Undergraduate Universities (UG) – UK, Australia & Canada")
-    st.write("Data based on QS World University Rankings (Top 100, 2026 edition)")
+    st.title("🌎 Top Undergraduate Universities (QS 2025)")
+    st.write("Based on QS World University Rankings for UK, Australia, and Canada")
 
     df = load_data()
+
+    if df.empty or "Country" not in df.columns:
+        st.error("⚠️ No data found. Please check scraper or site structure.")
+        return
 
     countries = ["All"] + sorted(df["Country"].unique())
     country = st.selectbox("Filter by Country", countries)
@@ -25,8 +28,7 @@ def main():
     st.write(f"Showing {len(df)} universities")
     st.dataframe(df.reset_index(drop=True))
 
-    if st.button("Download CSV"):
-        st.download_button("Download CSV", df.to_csv(index=False), "top_ug_unis.csv", "text/csv")
+    st.download_button("Download CSV", df.to_csv(index=False), "top_ug_unis.csv", "text/csv")
 
 if __name__ == "__main__":
     main()
