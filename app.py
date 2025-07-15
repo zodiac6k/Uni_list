@@ -1,31 +1,37 @@
 import streamlit as st
 import pandas as pd
-from scraper import get_universities_from_wikipedia
 
-@st.cache_data(ttl=3600)
+@st.cache_data
 def load_data():
-    return get_universities_from_wikipedia()
+    url = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_NAME/main/data/universities_enriched_streamlit.csv"
+    return pd.read_csv(url)
 
 def main():
-    st.set_page_config(page_title="Top UG Universities", layout="wide")
-    st.title("🎓 Top UG Universities – UK, Canada & Australia (Wikipedia)")
+    st.set_page_config(page_title="Top UG Business Universities", layout="wide")
+    st.title("🎓 Top UG Business Universities – UK, Canada, Australia")
+
     df = load_data()
 
-    if df.empty:
-        st.error("⚠️ No university data available.")
-        return
-
-    countries = ["All"] + sorted(df["Country"].unique())
-    country = st.selectbox("Filter by Country", countries)
+    # Filters
+    country = st.selectbox("🌍 Filter by Country", ["All"] + sorted(df["Country"].unique()))
     if country != "All":
         df = df[df["Country"] == country]
 
-    search = st.text_input("Search University")
+    coop = st.selectbox("🛠️ Co-op Availability", ["All", "Yes", "No"])
+    if coop != "All":
+        df = df[df["Co-op"] == coop]
+
+    max_fee = st.slider("💰 Max Fees (INR)", min_value=1000000, max_value=3000000, step=100000, value=2500000)
+    df = df[df["Fees (INR)"] <= max_fee]
+
+    search = st.text_input("🔎 Search University")
     if search:
         df = df[df["University"].str.contains(search, case=False)]
 
+    st.write(f"Showing {len(df)} universities")
     st.dataframe(df.reset_index(drop=True), use_container_width=True)
-    st.download_button("Download CSV", df.to_csv(index=False), "ug_universities_wikipedia.csv", "text/csv")
+
+    st.download_button("📥 Download CSV", df.to_csv(index=False), "top_ug_universities.csv", "text/csv")
 
 if __name__ == "__main__":
     main()
