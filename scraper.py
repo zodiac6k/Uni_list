@@ -9,9 +9,9 @@ def get_qs_top100():
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         json_data = response.json()
-
         records = json_data["data"]
-        results = []
+
+        data = []
         for rec in records:
             rank = rec.get("rank_display", "")
             name = rec.get("title", "")
@@ -20,15 +20,14 @@ def get_qs_top100():
             full_url = "https://www.topuniversities.com" + url_path
 
             if location in ["United Kingdom", "Australia", "Canada"]:
-                results.append({
+                data.append({
                     "Rank": rank,
                     "University": name,
                     "Country": location,
                     "Website": full_url
                 })
 
-        return pd.DataFrame(results)
+        return pd.DataFrame(data)
 
     except Exception as e:
-        print(f"Failed to fetch data: {e}")
-        return pd.DataFrame()
+        print("Scraper error:",
