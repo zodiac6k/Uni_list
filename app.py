@@ -3,7 +3,7 @@ import pandas as pd
 
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/REPO_NAME/main/data/universities_enriched_streamlit.csv"
+    url = "https://raw.githubusercontent.com/zodiac6k/Uni_list/main/data/universities_enriched_streamlit.csv"
     return pd.read_csv(url)
 
 def main():
@@ -34,4 +34,3 @@ def main():
     st.download_button("📥 Download CSV", df.to_csv(index=False), "top_ug_universities.csv", "text/csv")
 
 if __name__ == "__main__":
-    main()
