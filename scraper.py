@@ -1,36 +1,34 @@
-import pandas as pd
 import requests
-from bs4 import BeautifulSoup
+import pandas as pd
 
-WIKI_URLS = {
-    "Canada": "https://en.wikipedia.org/wiki/Rankings_of_universities_in_Canada",
-    "Australia": "https://en.wikipedia.org/wiki/University_of_Queensland",  # replace with robust list page later
-    "United Kingdom": "https://en.wikipedia.org/wiki/Russell_Group"
-}
+def get_qs_top100():
+    url = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/3740566.txt"
+    headers = {"User-Agent": "Mozilla/5.0"}
 
-def get_rankings_from_wiki(country):
-    url = WIKI_URLS[country]
-    resp = requests.get(url, headers={"User-Agent":"Mozilla/5.0"})
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, "html.parser")
-    data = []
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        json_data = response.json()
 
-    table = soup.find("table", {"class":"wikitable"})
-    if not table: return pd.DataFrame()
+        records = json_data["data"]
+        results = []
+        for rec in records:
+            rank = rec.get("rank_display", "")
+            name = rec.get("title", "")
+            location = rec.get("location", {}).get("name", "")
+            url_path = rec.get("url", "")
+            full_url = "https://www.topuniversities.com" + url_path
 
-    for row in table.find_all("tr")[1:11]:
-        cols = [c.get_text(strip=True) for c in row.find_all(["td", "th"])]
-        if country == "Canada":
-            uni = cols[0]
-            rank = cols[1].split(" ")[0]
-        else:
-            uni = cols[0]
-            rank = cols[1] if len(cols) > 1 else ""
-        data.append({"University": uni, "Rank": rank, "Country": country})
+            if location in ["United Kingdom", "Australia", "Canada"]:
+                results.append({
+                    "Rank": rank,
+                    "University": name,
+                    "Country": location,
+                    "Website": full_url
+                })
 
-    return pd.DataFrame(data)
+        return pd.DataFrame(results)
 
-def get_all():
-    dfs = [get_rankings_from_wiki(c) for c in WIKI_URLS]
-    combined = pd.concat(dfs, ignore_index=True)
-    return combined.dropna(subset=["University"])
+    except Exception as e:
+        print(f"Failed to fetch data: {e}")
+        return pd.DataFrame()
