@@ -49,26 +49,13 @@ df_filtered = df[df["country"].isin(country_filter)].nsmallest(top_n, "rank")
 CONTACTS_PATH = Path("data/university_contacts.csv")
 contacts_df = pd.read_csv(CONTACTS_PATH) if CONTACTS_PATH.exists() else pd.DataFrame()
 
-# Display universities
-for _, row in df_filtered.iterrows():
-    st.markdown(f"### 🎓 {row['university_name']} (Rank #{row['rank']})")
-    st.write(f"📍 Country: {row['country']}")
-    if 'website' in row and pd.notna(row['website']):
-        st.write(f"🌐 Website: [{row['website']}]({row['website']})")
+# Add clickable website column if available
+if 'website' in df_filtered.columns:
+    df_filtered['website'] = df_filtered['website'].apply(lambda x: f"[Visit Site]({x})" if pd.notna(x) else "")
 
-    if 'sample_courses' in row and pd.notna(row['sample_courses']):
-        st.markdown("**📘 Courses in Finance/Analytics:**")
-        st.markdown(row["sample_courses"], unsafe_allow_html=True)
-
-    # Show contact details if available
-    if not contacts_df.empty:
-        contact = contacts_df[contacts_df["university_name"] == row["university_name"]]
-        if not contact.empty:
-            st.markdown("**📞 Counselor Contact:**")
-            for _, info in contact.iterrows():
-                st.markdown(f"- **{info['counselor_name']}**: {info['email']} | {info['phone']}")
-
-    st.markdown("---")
+# Display as interactive table with clickable links
+st.subheader("🏫 Filtered University List")
+st.dataframe(df_filtered.style.format({"website": lambda x: x}), use_container_width=True, hide_index=True)
 
 # Chart
 if not df_filtered.empty:
