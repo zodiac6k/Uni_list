@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 import plotly.express as px
+import datetime
 
 # Page config
 st.set_page_config(page_title="UniChamp - University Finder", layout="wide")
@@ -13,6 +14,10 @@ DATA_PATH = Path("data/university_data_sample.csv")
 if not DATA_PATH.exists():
     st.error("University data file not found. Please upload the CSV to the 'data' folder.")
     st.stop()
+
+# Weekly refresh info
+last_refreshed = datetime.datetime.fromtimestamp(DATA_PATH.stat().st_mtime).strftime("%Y-%m-%d %H:%M")
+st.caption(f"🔄 Data last refreshed: {last_refreshed}")
 
 # Load CSV and sanitize
 df = pd.read_csv(DATA_PATH)
