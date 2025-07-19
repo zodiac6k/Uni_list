@@ -29,6 +29,11 @@ st.sidebar.header("🔍 Filter Options")
 top_n = st.sidebar.slider("Show Top N Universities", min_value=10, max_value=100, value=50, step=10)
 country_filter = st.sidebar.multiselect("Filter by Country", options=sorted(df["country"].dropna().unique()), default=sorted(df["country"].dropna().unique()))
 
+# Course filter
+if 'program_major' in df.columns:
+    course_filter = st.sidebar.multiselect("Filter by Course", options=sorted(df['program_major'].dropna().unique()), default=sorted(df['program_major'].dropna().unique()))
+    df = df[df['program_major'].isin(course_filter)]
+
 # Additional filters if available
 if 'scholarship' in df.columns:
     scholarship_filter = st.sidebar.multiselect("Scholarship Available", options=df['scholarship'].dropna().unique(), default=df['scholarship'].dropna().unique())
@@ -65,6 +70,13 @@ if not df_filtered.empty:
 
 # Download button
 st.download_button("📥 Download Filtered Results", df_filtered.to_csv(index=False), "filtered_universities.csv", "text/csv")
+
+# Contacts section
+if not contacts_df.empty:
+    st.subheader("📞 University Contacts and Deadlines")
+    st.dataframe(contacts_df, use_container_width=True, hide_index=True)
+else:
+    st.info("No contact information available yet. Please upload to data/university_contacts.csv")
 
 # Weekly tips section
 st.subheader("📝 Weekly Preparation Tips")
