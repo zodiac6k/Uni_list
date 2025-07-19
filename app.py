@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from pathlib import Path
+import plotly.express as px
 
 # Page config
 st.set_page_config(page_title="UniChamp - University Finder", layout="wide")
@@ -21,13 +22,25 @@ if 'university_name' not in df.columns:
 
 # Add default rank if missing
 df.insert(1, 'rank', range(1, len(df) + 1)) if 'rank' not in df.columns else None
-
 df = df.dropna(subset=["university_name"])  # ensure data consistency
 
-# Filters
+# Sidebar Filters
 st.sidebar.header("🔍 Filter Options")
 top_n = st.sidebar.slider("Show Top N Universities", min_value=10, max_value=100, value=50, step=10)
 country_filter = st.sidebar.multiselect("Filter by Country", options=sorted(df["country"].dropna().unique()), default=sorted(df["country"].dropna().unique()))
+
+# Additional filters if available
+if 'scholarship' in df.columns:
+    scholarship_filter = st.sidebar.multiselect("Scholarship Available", options=df['scholarship'].dropna().unique(), default=df['scholarship'].dropna().unique())
+    df = df[df['scholarship'].isin(scholarship_filter)]
+if 'visa_type' in df.columns:
+    visa_filter = st.sidebar.multiselect("Post-Study Visa Type", options=df['visa_type'].dropna().unique(), default=df['visa_type'].dropna().unique())
+    df = df[df['visa_type'].isin(visa_filter)]
+
+# University name search
+search_term = st.sidebar.text_input("Search University")
+if search_term:
+    df = df[df["university_name"].str.contains(search_term, case=False, na=False)]
 
 # Apply filters
 df_filtered = df[df["country"].isin(country_filter)].nsmallest(top_n, "rank")
@@ -56,6 +69,15 @@ for _, row in df_filtered.iterrows():
                 st.markdown(f"- **{info['counselor_name']}**: {info['email']} | {info['phone']}")
 
     st.markdown("---")
+
+# Chart
+if not df_filtered.empty:
+    chart = px.bar(df_filtered, x="university_name", y=["score", "teaching", "research", "citations"],
+                   barmode="group", title="📊 Academic Performance Comparison")
+    st.plotly_chart(chart, use_container_width=True)
+
+# Download button
+st.download_button("📥 Download Filtered Results", df_filtered.to_csv(index=False), "filtered_universities.csv", "text/csv")
 
 # Weekly tips section
 st.subheader("📝 Weekly Preparation Tips")
