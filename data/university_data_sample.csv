@@ -1,0 +1,51 @@
+university_name,country,score,teaching,research,citations,income,IELTS_required,program_major,years_of_study,coop_available,post_study_visa
+University of Oxford,UK,99,85.0,87.0,90.0,70.0,7.0,Business Analytics,4,Yes,Yes
+Harvard University,USA,98,85.3,86.8,89.6,70.5,6.5,Engineering,3,Yes,Yes
+Stanford University,USA,97,85.6,86.6,89.2,71.0,6.5,Finance,3,Yes,Yes
+University of Cambridge,UK,96,85.9,86.4,88.8,71.5,7.0,Computer Science,3,No,Yes
+MIT,USA,95,86.2,86.2,88.4,72.0,6.5,Business Analytics,3,Yes,Yes
+Caltech,USA,94,86.5,86.0,88.0,72.5,6.5,Engineering,4,Yes,Yes
+Princeton University,USA,93,86.8,85.8,87.6,73.0,7.0,Finance,3,Yes,Yes
+Yale University,USA,92,87.1,85.6,87.2,73.5,6.5,Computer Science,3,No,Yes
+Imperial College London,UK,91,87.4,85.4,86.8,74.0,6.5,Business Analytics,3,Yes,Yes
+University of Chicago,USA,90,87.7,85.2,86.4,74.5,7.0,Engineering,3,Yes,Yes
+ETH Zurich,Switzerland,89,88.0,85.0,86.0,75.0,6.5,Finance,4,Yes,Yes
+University of Pennsylvania,USA,88,88.3,84.8,85.6,75.5,6.5,Computer Science,3,No,Yes
+Johns Hopkins University,USA,87,88.6,84.6,85.2,76.0,7.0,Business Analytics,3,Yes,Yes
+Columbia University,USA,86,88.9,84.4,84.8,76.5,6.5,Engineering,3,Yes,Yes
+UCLA,USA,85,89.2,84.2,84.4,77.0,6.5,Finance,3,Yes,Yes
+University of Toronto,Canada,84,89.5,84.0,84.0,77.5,7.0,Computer Science,4,No,Yes
+University of Edinburgh,UK,83,89.8,83.8,83.6,78.0,6.5,Business Analytics,3,Yes,Yes
+University of Michigan,USA,82,90.1,83.6,83.2,78.5,6.5,Engineering,3,Yes,Yes
+Peking University,China,81,90.4,83.4,82.8,79.0,7.0,Finance,3,Yes,Yes
+Tsinghua University,China,80,90.7,83.2,82.4,79.5,6.5,Computer Science,3,No,Yes
+University of Tokyo,Japan,79,91.0,83.0,82.0,80.0,6.5,Business Analytics,4,Yes,Yes
+National University of Singapore,Singapore,78,91.3,82.8,81.6,80.5,7.0,Engineering,3,Yes,Yes
+University of Melbourne,Australia,77,91.6,82.6,81.2,81.0,6.5,Finance,3,Yes,Yes
+LSE,UK,76,91.9,82.4,80.8,81.5,6.5,Computer Science,3,No,Yes
+University of British Columbia,Canada,75,92.2,82.2,80.4,82.0,7.0,Business Analytics,3,Yes,Yes
+King’s College London,UK,74,92.5,82.0,80.0,82.5,6.5,Engineering,4,Yes,Yes
+McGill University,Canada,73,92.8,81.8,79.6,83.0,6.5,Finance,3,Yes,Yes
+ANU,Australia,72,93.1,81.6,79.2,83.5,7.0,Computer Science,3,No,Yes
+University of Manchester,UK,71,93.4,81.4,78.8,84.0,6.5,Business Analytics,3,Yes,Yes
+Seoul National University,South Korea,70,93.7,81.2,78.4,84.5,6.5,Engineering,3,Yes,Yes
+Cornell University,USA,69,94.0,81.0,78.0,85.0,7.0,Finance,4,Yes,Yes
+Northwestern University,USA,68,94.3,80.8,77.6,85.5,6.5,Computer Science,3,No,Yes
+Duke University,USA,67,94.6,80.6,77.2,86.0,6.5,Business Analytics,3,Yes,Yes
+University of Sydney,Australia,66,94.9,80.4,76.8,86.5,7.0,Engineering,3,Yes,Yes
+University of Hong Kong,Hong Kong,65,95.2,80.2,76.4,87.0,6.5,Finance,3,Yes,Yes
+"University of California, Berkeley",USA,64,95.5,80.0,76.0,87.5,6.5,Computer Science,4,No,Yes
+Karolinska Institute,Sweden,63,95.8,79.8,75.6,88.0,7.0,Business Analytics,3,Yes,Yes
+KU Leuven,Belgium,62,96.1,79.6,75.2,88.5,6.5,Engineering,3,Yes,Yes
+University of Copenhagen,Denmark,61,96.4,79.4,74.8,89.0,6.5,Finance,3,Yes,Yes
+LMU Munich,Germany,60,96.7,79.2,74.4,89.5,7.0,Computer Science,3,No,Yes
+University of Amsterdam,Netherlands,59,97.0,79.0,74.0,90.0,6.5,Business Analytics,4,Yes,Yes
+Sorbonne University,France,58,97.3,78.8,73.6,90.5,6.5,Engineering,3,Yes,Yes
+Heidelberg University,Germany,57,97.6,78.6,73.2,91.0,7.0,Finance,3,Yes,Yes
+University of Zurich,Switzerland,56,97.9,78.4,72.8,91.5,6.5,Computer Science,3,No,Yes
+Osaka University,Japan,55,98.2,78.2,72.4,92.0,6.5,Business Analytics,3,Yes,Yes
+University of Queensland,Australia,54,98.5,78.0,72.0,92.5,7.0,Engineering,4,Yes,Yes
+University of New South Wales,Australia,53,98.8,77.8,71.6,93.0,6.5,Finance,3,Yes,Yes
+Monash University,Australia,52,99.1,77.6,71.2,93.5,6.5,Computer Science,3,No,Yes
+Kyoto University,Japan,51,99.4,77.4,70.8,94.0,7.0,Business Analytics,3,Yes,Yes
+Brown University,USA,50,99.7,77.2,70.4,94.5,6.5,Engineering,3,Yes,Yes

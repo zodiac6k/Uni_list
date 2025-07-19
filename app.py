@@ -1,53 +1,69 @@
 import streamlit as st
 import pandas as pd
-import datetime
+from pathlib import Path
 
-# Page settings
-st.set_page_config(page_title="Unichamp - Top Universities", layout="wide")
-st.title("🎓 Unichamp - Explore Top Universities for Finance & Analytics")
+# Page config
+st.set_page_config(page_title="UniChamp - University Finder", layout="wide")
+st.title("🎓 UniChamp - Top Universities & Courses")
+st.markdown("Find top universities, explore finance/analytics programs, and get weekly preparation tips.")
 
-# Load data
-@st.cache_data
-def load_data():
-    df_universities = pd.read_csv("data/university_data_sample.csv")
-    df_courses = pd.read_csv("data/finance_courses.csv")
-    return df_universities, df_courses
+# Load university data
+DATA_PATH = Path("data/university_data_sample.csv")
+if not DATA_PATH.exists():
+    st.error("University data file not found. Please upload the CSV to the 'data' folder.")
+    st.stop()
 
-df_universities, df_courses = load_data()
+# Load CSV and sanitize
+df = pd.read_csv(DATA_PATH)
+if 'university_name' not in df.columns:
+    st.error("The CSV must contain a 'university_name' column.")
+    st.stop()
 
-# Rank calculation
-df_universities = df_universities.sort_values("score", ascending=False).reset_index(drop=True)
-df_universities["rank"] = df_universities.index + 1
+# Add default rank if missing
+df.insert(1, 'rank', range(1, len(df) + 1)) if 'rank' not in df.columns else None
 
-# Sidebar Filters
-st.sidebar.header("🔍 Filters")
-top_n = st.sidebar.slider("Show Top N Universities", 10, 50, 25)
-countries = df_universities["country"].unique()
-selected_countries = st.sidebar.multiselect("Filter by Country", options=sorted(countries), default=sorted(countries))
-sort_by = st.sidebar.selectbox("Sort By", ["rank", "score", "teaching", "research", "citations", "income"])
+df = df.dropna(subset=["university_name"])  # ensure data consistency
 
-# Filter DataFrame
-df_filtered = df_universities[df_universities["country"].isin(selected_countries)]
-df_filtered = df_filtered[df_filtered["rank"] <= top_n]
-df_filtered = df_filtered.sort_values(by=sort_by, ascending=(sort_by == "rank"))
+# Filters
+st.sidebar.header("🔍 Filter Options")
+top_n = st.sidebar.slider("Show Top N Universities", min_value=10, max_value=100, value=50, step=10)
+country_filter = st.sidebar.multiselect("Filter by Country", options=sorted(df["country"].dropna().unique()), default=sorted(df["country"].dropna().unique()))
 
-# Weekly Prep Tip
-prep_tips = [
-    "Start preparing for IELTS early.",
-    "Build your resume with internships and online courses.",
-    "Research visa options for each country.",
-    "Reach out to alumni via LinkedIn.",
-    "Mark application deadlines in your calendar."
-]
-week = datetime.date.today().isocalendar()[1]
-st.sidebar.header("📅 Weekly Prep Tip")
-st.sidebar.info(prep_tips[week % len(prep_tips)])
+# Apply filters
+df_filtered = df[df["country"].isin(country_filter)].nsmallest(top_n, "rank")
 
-# Display Summary Table
-st.markdown(f"### 📊 Showing Top {top_n} Universities (Sorted by **{sort_by}**)")
-st.dataframe(df_filtered[["rank", "university_name", "country", "score", "teaching", "research", "citations", "income"]], use_container_width=True)
+# Load contacts if available
+CONTACTS_PATH = Path("data/university_contacts.csv")
+contacts_df = pd.read_csv(CONTACTS_PATH) if CONTACTS_PATH.exists() else pd.DataFrame()
 
-# Per-university display with course table
+# Display universities
 for _, row in df_filtered.iterrows():
-    st.markdown(f"---\n### 🎓 {row['university_name']} (Rank #{row['rank']})")
-    st.markdown
+    st.markdown(f"### 🎓 {row['university_name']} (Rank #{row['rank']})")
+    st.write(f"📍 Country: {row['country']}")
+    if 'website' in row and pd.notna(row['website']):
+        st.write(f"🌐 Website: [{row['website']}]({row['website']})")
+
+    if 'sample_courses' in row and pd.notna(row['sample_courses']):
+        st.markdown("**📘 Courses in Finance/Analytics:**")
+        st.markdown(row["sample_courses"], unsafe_allow_html=True)
+
+    # Show contact details if available
+    if not contacts_df.empty:
+        contact = contacts_df[contacts_df["university_name"] == row["university_name"]]
+        if not contact.empty:
+            st.markdown("**📞 Counselor Contact:**")
+            for _, info in contact.iterrows():
+                st.markdown(f"- **{info['counselor_name']}**: {info['email']} | {info['phone']}")
+
+    st.markdown("---")
+
+# Weekly tips section
+st.subheader("📝 Weekly Preparation Tips")
+st.markdown("""
+- Review university admission deadlines.
+- Prepare SOPs and recommendation letters early.
+- Focus on IELTS/TOEFL/GRE/GMAT practice weekly.
+- Explore finance and data analytics MOOCs (Coursera, edX).
+- Reach out to university counselors in August for Fall 2026 intake.
+- Track your shortlisting progress in Excel or Notion.
+""")
